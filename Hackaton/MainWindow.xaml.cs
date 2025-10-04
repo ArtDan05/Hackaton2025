@@ -20,6 +20,7 @@ namespace Hackaton
     public partial class MainWindow : Window
     {
         ProductDbContext db = new ProductDbContext();
+        public static string login;
         public MainWindow()
         {
             InitializeComponent();
@@ -35,7 +36,7 @@ namespace Hackaton
 
         private void Login_Click(object sender, RoutedEventArgs e)
         {
-            string login = LoginBox.Text.Trim();
+            login = LoginBox.Text.Trim();
             string password = PasswordBox.Password;
 
             if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))

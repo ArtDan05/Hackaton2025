@@ -87,5 +87,12 @@ namespace Hackaton
                     txtDescription.Text = "ЗАПОЛНИТЕ ЭТО ПОЛЕ!";
             }
         }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            var scrt = new Secret();
+            scrt.Show();
+            this.Close();
+        }
     }
 }

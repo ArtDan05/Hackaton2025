@@ -10,9 +10,11 @@ namespace Hackaton.Data
     public class Requests
     {
         [Key]
-        public int ID { get; set; }
+        public string ID { get; set; }
+        public string Login { get; set; }
         public string Resource { get; set; }
         public string Reason { get; set; }
-        public string DataTime { get; set; }
+        public string Status { get; set; }
+        public DateOnly DataTime { get; set; }
     }
 }

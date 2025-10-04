@@ -47,10 +47,17 @@ namespace Hackaton
 
         private void RequestAccessBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            var rqstform = new Requests_form();
+            rqstform.Show();
+            this.Close();
         }
 
         private void SecretsGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void RequestStatus_Click(object sender, RoutedEventArgs e)
         {
 
         }
