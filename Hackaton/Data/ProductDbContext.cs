@@ -15,7 +15,7 @@ namespace Hackaton.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=secrets.db");
+            optionsBuilder.UseSqlite("Data Source=../Database/secrets.db");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
