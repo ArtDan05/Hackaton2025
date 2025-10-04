@@ -1,0 +1,95 @@
+.request-form-card {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 30px;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+/* --- УЛУЧШЕННЫЕ СТИЛИ ДЛЯ SELECT, INPUT и TEXTAREA --- */
+.form-control, .form-select, .form-textarea {
+    width: 100%;
+    padding: 12px 15px; /* Увеличили паддинг для красоты */
+    border: 1px solid var(--table-border);
+    border-radius: 8px; /* Скругление */
+    box-sizing: border-box;
+    font-size: 1em;
+    /* В темной теме: легкая прозрачность */
+    background-color: var(--card-bg); 
+    color: var(--text-color);
+    transition: border-color 0.3s, box-shadow 0.3s;
+    
+    /* Специфические стили для select (скрываем стандартную стрелку) */
+    appearance: none; 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* Добавляем свою стрелку через фон (по умолчанию - светлая) */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+}
+
+/* Изменение цвета стрелки в светлой теме */
+.light-theme .form-select {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23343a40" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');
+    background-color: #ffffff; /* Убираем прозрачность в светлой теме */
+}
+
+.form-control:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    /* Зеленое свечение при фокусе */
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.3); 
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Кнопка отправки */
+.btn-submit {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    width: 100%;
+    transition: background-color 0.2s;
+}
+.btn-submit:hover {
+    background-color: #1e7e34;
+}
+
+/* Стили для переключателя темы (копируются из dashboard.html) */
+.theme-toggle {
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 1.2em;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    transition: color 0.3s, background-color 0.3s;
+}
+.theme-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.theme-toggle .icon {
+    display: inline-block;
+    width: 1.2em;
+    height: 1.2em;
+    vertical-align: middle;
+    fill: currentColor;
+}

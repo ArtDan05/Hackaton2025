@@ -1,0 +1,21 @@
+{
+  "name": "secretmanager-api",
+  "version": "1.0.0",
+  "description": "Backend API for Secret Manager using Node.js and SQLite",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "sqlite"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "sqlite3": "^5.1.7"
+  }
+}

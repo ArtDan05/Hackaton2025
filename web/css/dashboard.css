@@ -1,0 +1,207 @@
+
+:root {
+
+    --primary-color: #28a745;
+    
+
+    --bg-main: #0e1628;
+    --bg-gradient: radial-gradient(circle at top right, #1a3260 0%, #0e1628 50%);
+    --navbar-bg: #121f3d;
+    --navbar-border: rgba(255, 255, 255, 0.1);
+    --card-bg: rgba(255, 255, 255, 0.1);
+    --text-color: #f8f9fa;
+    --table-header-bg: rgba(0, 0, 0, 0.2);
+    --table-border: rgba(255, 255, 255, 0.1);
+    --table-hover-bg: rgba(255, 255, 255, 0.05);
+    --btn-secondary-bg: rgba(255, 255, 255, 0.15);
+    --btn-secondary-hover: rgba(255, 255, 255, 0.25);
+}
+
+.light-theme {
+
+    --bg-main: #f4f6f9;
+    --bg-gradient: none;
+    --navbar-bg: #ffffff;
+    --navbar-border: #e9ecef;
+    --card-bg: #ffffff;
+    --text-color: #343a40;
+    --table-header-bg: #e9ecef;
+    --table-border: #dee2e6;
+    --table-hover-bg: #f1f3f5;
+    --btn-secondary-bg: #6c757d;
+    --btn-secondary-hover: #5a6268;
+
+
+    --status-pending-bg: #fff3cd;
+    --status-pending-color: #856404;
+    --status-pending-border: #ffeeba;
+    --status-approved-bg: #d4edda;
+    --status-approved-color: #155724;
+    --status-approved-border: #c3e6cb;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-main);
+    background-image: var(--bg-gradient);
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    color: var(--text-color); 
+    transition: background-color 0.5s, color 0.5s;
+}
+
+.navbar {
+    background-color: var(--navbar-bg);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid var(--navbar-border);
+    transition: background-color 0.5s;
+}
+
+.navbar-brand {
+    color: var(--text-color);
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.btn-secondary {
+    background-color: var(--btn-secondary-bg);
+    color: var(--text-color);
+    border: 1px solid var(--navbar-border);
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: var(--btn-secondary-hover);
+}
+
+.page-header h2 {
+    color: var(--text-color);
+    font-weight: 400;
+}
+
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--navbar-border);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    overflow: hidden; 
+    padding: 20px;
+    transition: background-color 0.5s;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px; 
+    color: var(--text-color);
+}
+
+.data-table th, .data-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--table-border); 
+}
+
+.data-table thead th {
+    background-color: var(--table-header-bg);
+    color: var(--text-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+.data-table tbody tr:hover {
+    background-color: var(--table-hover-bg); 
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-pending {
+    background-color: var(--status-pending-bg, rgba(255, 193, 7, 0.3)); 
+    color: var(--status-pending-color, #ffc107); 
+    border: 1px solid var(--status-pending-border, rgba(255, 193, 7, 0.5));
+}
+
+.status-approved {
+    background-color: var(--status-approved-bg, rgba(40, 167, 69, 0.3)); 
+    color: var(--status-approved-color, var(--primary-color)); 
+    border: 1px solid var(--status-approved-border, rgba(40, 167, 69, 0.5));
+}
+
+.btn-action {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+}
+
+.btn-action:hover {
+    background-color: #1e7e34;
+}
+
+.container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 15px;
+}
+
+.theme-toggle {
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 1.2em;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    transition: color 0.3s, background-color 0.3s;
+}
+.theme-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.theme-toggle .icon {
+    display: inline-block;
+    width: 1.2em;
+    height: 1.2em;
+    vertical-align: middle;
+    fill: currentColor;
+}
+
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-profile {
+    color: var(--text-color);
+    font-size: 1em;
+    padding: 0 10px;
+    white-space: nowrap; 
+}
+
+.username-text {
+    font-weight: 600;
+    color: var(--primary-color);
+}
