@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hackaton.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,11 @@ namespace Hackaton
     /// </summary>
     public partial class Status : Window
     {
-        public Status()
+        ProductDbContext dbContext = new();
+        public Status(string name)
         {
             InitializeComponent();
+            SecretsGrid.ItemsSource = dbContext.Requests.Where(r => r.Resource.ToLower() == name.ToLower() && r.Login == MainWindow.login).ToList();
         }
 
         private void Close_CLic(object sender, RoutedEventArgs e)
@@ -29,6 +32,18 @@ namespace Hackaton
             var scrt = new Secret();
             scrt.Show();
             this.Close();
+        }
+
+        private void DoubleClickOnGrid(object sender, MouseButtonEventArgs e)
+        {
+            DataGrid dg = sender as DataGrid;
+            var so = dg.SelectedItem;
+            if (so.GetType().GetProperty("Status").GetValue(so).ToString() == "Approved") {
+                
+                SecretSeeker sw = new SecretSeeker(so.GetType().GetProperty("Resource").GetValue(so).ToString());
+                sw.Show();
+                this.Close();
+            }
         }
     }
 }

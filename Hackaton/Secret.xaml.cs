@@ -20,7 +20,7 @@ namespace Hackaton
     /// </summary>
     public partial class Secret : Window
     {
-        ProductDbContext dbContext;
+        ProductDbContext dbContext = new ProductDbContext();
         public Secret()
         {
             
@@ -29,13 +29,11 @@ namespace Hackaton
            
         }
 
-        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
             var search = SearchTextBox.Text.ToLower();
-            SecretsGrid.ItemsSource = dbContext.Secrets
-                .Where(s => s.Name.ToLower().Contains(search) ||
-                           s.Host.ToLower().Contains(search))
-                .ToList();
+            
+            SecretsGrid.ItemsSource = dbContext.Secrets.Where(s => s.Name.ToLower() == search && s.LoginEncrypted == MainWindow.login).ToList();
         }
 
         private void AddSecretBtn_Click(object sender, RoutedEventArgs e)
@@ -54,12 +52,11 @@ namespace Hackaton
 
         private void SecretsGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-
-        }
-
-        private void RequestStatus_Click(object sender, RoutedEventArgs e)
-        {
-
+            DataGrid dg = sender as DataGrid;
+            var so = dg.SelectedItem;
+            Status sw = new Status(so.GetType().GetProperty("Name").GetValue(so).ToString());
+            sw.Show();
+            this.Close();
         }
     }
 }

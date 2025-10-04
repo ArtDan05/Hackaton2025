@@ -32,10 +32,10 @@ namespace Hackaton
             var newrq = new Requests()
             {
                 ID = "REQ" + Guid.NewGuid().ToString("N").Substring(0, 5).ToUpper(),
-                DataTime = new DateOnly(int.Parse(date[2]), int.Parse(date[1]), int.Parse(date[0])),
+                DateTime = new DateOnly(int.Parse(date[2]), int.Parse(date[1]), int.Parse(date[0])),
                 Reason = txtReason.Text,
                 Resource = txtResource.Text,
-                Status = "На рассмотрении",
+                Status = "Pending",
                 Login = MainWindow.login
             };
 

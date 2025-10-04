@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -53,12 +54,19 @@ namespace Hackaton
                 txtHost.Text != "" &&
                 txtDescription.Text != "") 
             {
+                string password = txtPassword.Text;
+                byte[] hashedpas = new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(password));
+                password = "";
+                foreach (byte c in hashedpas) password += c.ToString("x2");
+
+                string login = txtLogin.Text;
+
                 Secrets s = new Secrets()
                 {
                     ID = "SEC" + Guid.NewGuid().ToString("N").Substring(0, 5).ToUpper(),
                     Name = txtFullName.Text,
-                    LoginEncrypted = PasswordHasher.HashPassword(txtLogin.Text),
-                    PasswordEncrypted = PasswordHasher.HashPassword(txtPassword.Text),
+                    LoginEncrypted = login,
+                    PasswordEncrypted = password,
                     Host = txtHost.Text,
                     CreatedAt = DateTime.Now,
                     Description = txtDescription.Text

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -48,6 +49,9 @@ namespace Hackaton
         {
             string login = LoginBox.Text.Trim();
             string password = PasswordBox.Password;
+            byte[] hashedpas = new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(password));
+            password = "";
+            foreach (byte c in hashedpas) password += c.ToString("x2");
 
             if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
             {
@@ -73,7 +77,7 @@ namespace Hackaton
                 {
                     UserID = "USE" + Guid.NewGuid().ToString("N").Substring(0, 5).ToUpper(),
                     Username = login,
-                    PasswordHash = PasswordHasher.HashPassword(password),
+                    PasswordHash = password,
                     Role = "User"
                 };
 

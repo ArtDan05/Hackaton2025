@@ -15,6 +15,6 @@ namespace Hackaton.Data
         public string Resource { get; set; }
         public string Reason { get; set; }
         public string Status { get; set; }
-        public DateOnly DataTime { get; set; }
+        public DateOnly DateTime { get; set; }
     }
 }

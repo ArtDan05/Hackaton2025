@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Security.Cryptography;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -38,6 +39,9 @@ namespace Hackaton
         {
             login = LoginBox.Text.Trim();
             string password = PasswordBox.Password;
+            byte[] hashedpas = new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(password));
+            password = "";
+            foreach (byte c in hashedpas) password += c.ToString("x2");
 
             if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
             {
@@ -55,7 +59,7 @@ namespace Hackaton
                     return;
                 }
 
-                if (PasswordHasher.VerifyPassword(password, user.PasswordHash))
+                if (password == user.PasswordHash)
                 {
                     new Secret().Show();
                     this.Close();
