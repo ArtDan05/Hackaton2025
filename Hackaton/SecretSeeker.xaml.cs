@@ -25,7 +25,7 @@ namespace Hackaton
         public SecretSeeker(string name)
         {
             InitializeComponent();
-            DesciptionText.Text = dbContext.Secrets.Where(r => r.Name.ToLower() == name.ToLower() && r.LoginEncrypted == MainWindow.login).ToList()[0].Description;
+            DescriptionText.Text = dbContext.Secrets.Where(r => r.Name.ToLower() == name.ToLower() && r.LoginEncrypted == MainWindow.login).ToList()[0].Description;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

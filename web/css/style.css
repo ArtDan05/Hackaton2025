@@ -1,11 +1,10 @@
-/* --- ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ --- */
+
 :root {
-    /* Общие */
-    --primary-color: #007bff; /* Синий для основного действия */
-    
-    /* ТЕМНАЯ ТЕМА (по умолчанию) */
-    --bg-main: linear-gradient(135deg, #140d3d 0%, #000428 100%);
-    --card-bg: rgba(255, 255, 255, 0.15); /* Прозрачный белый для стекла */
+
+    --primary-color: #007bff; 
+    --bg-main: #0e1628;
+    --bg-gradient: radial-gradient(circle at top right, #1a3260 0%, #0e1628 50%);
+    --card-bg: rgba(255, 255, 255, 0.15); 
     --text-color: #f8f9fa;
     --input-bg: rgba(0, 0, 0, 0.2);
     --input-border: rgba(255, 255, 255, 0.4);
@@ -14,11 +13,10 @@
     --version-text: rgba(255, 255, 255, 0.7);
 }
 
-/* --- ПЕРЕОПРЕДЕЛЕНИЕ ДЛЯ СВЕТЛОЙ ТЕМЫ --- */
 .light-theme {
-    /* Светлая тема */
+
     --bg-main: linear-gradient(135deg, #f0f2f5 0%, #ffffff 100%);
-    --card-bg: rgba(255, 255, 255, 0.9); /* Почти непрозрачный белый */
+    --card-bg: rgba(255, 255, 255, 0.9);
     --text-color: #333;
     --input-bg: #f8f9fa;
     --input-border: #ddd;
@@ -74,7 +72,6 @@
     color: var(--primary-color);
 }
 
-/* Форма и элементы управления */
 .form-group {
     margin-bottom: 20px;
 }
@@ -103,7 +100,7 @@
     border-color: var(--primary-color);
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.4);
-    background-color: var(--input-bg); /* Сохраняем фон при фокусе */
+    background-color: var(--input-bg);
 }
 
 .btn {

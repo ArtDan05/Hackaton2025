@@ -1,4 +1,7 @@
+const API_BASE_URL = "http://127.0.0.1:5000/api/requests";
+const tbody = document.getElementById("requestsTable");
 
+// переключение темы
 const body = document.body;
 const themeToggle = document.getElementById('themeToggle');
 const sunIcon = document.getElementById('sunIcon');
@@ -19,7 +22,6 @@ function applyTheme(theme) {
 const savedTheme = localStorage.getItem('theme') || 'dark';
 applyTheme(savedTheme);
 
-
 themeToggle.addEventListener('click', () => {
     const currentTheme = body.classList.contains('light-theme') ? 'light' : 'dark';
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -29,37 +31,44 @@ themeToggle.addEventListener('click', () => {
 });
 
 
-if (localStorage.getItem("auth") !== "true") {
-    window.location.href = "login.html";
-}
-
-const requests = [
-    {id: "1", resource: "Prod DB", reason: "Для отчета", until: "2025-10-05", status: "pending"},
-    {id: "2", resource: "VPN", reason: "Удаленка", until: "2025-10-06", status: "approved"},
-    {id: "3", resource: "Azure Creds", reason: "Новый проект", until: "2025-11-01", status: "pending"},
-];
-
-function renderRequests() {
-    const tbody = document.getElementById("requestsTable");
+/**
+ * рендерит данные в таблицу
+ * @param {Array} requests 
+ */
+function renderRequests(requests) {
     tbody.innerHTML = "";
+    
+    if (requests.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;">Активных заявок нет.</td></tr>';
+        return;
+    }
+
     requests.forEach(r => {
         const tr = document.createElement("tr");
+        
         let statusClass = '';
-        if (r.status === 'pending') {
+        if (r.Status === 'pending') {
             statusClass = 'status-pending';
-        } else if (r.status === 'approved') {
+        } else if (r.Status === 'approved') {
             statusClass = 'status-approved';
+        } else if (r.Status === 'rejected') {
+            statusClass = 'status-rejected'; 
         }
 
         tr.innerHTML = `
-            <td>${r.id}</td>
-            <td>${r.resource}</td>
-            <td>${r.reason}</td>
-            <td>${r.until}</td>
-            <td><span class="status-badge ${statusClass}">${r.status}</span></td>
+            <td>${r.ID}</td>
+            <td>${r.Resource}</td>
+            <td>${r.Reason}</td>
+            <td>${r.Login || '—'}</td>
+            <td>${r.DateTime || '—'}</td> <td><span class="status-badge ${statusClass}">${r.Status}</span></td>
             <td>
-                ${r.status === "pending" 
-                    ? `<button class="btn btn-action" onclick="approve('${r.id}')">Approve</button>` 
+                ${r.Status === "pending" 
+                    ? `
+                        <div class="action-buttons">
+                            <button class="btn btn-action btn-approve" onclick="updateStatus('${r.ID}', 'approved')">Принять</button>
+                            <button class="btn btn-action btn-reject" onclick="updateStatus('${r.ID}', 'rejected')">Отклонить</button>
+                        </div>
+                    ` 
                     : "—"}
             </td>
         `;
@@ -67,18 +76,65 @@ function renderRequests() {
     });
 }
 
-function approve(id) {
-    const req = requests.find(r => r.id === id);
-    if (req) {
-        req.status = "approved";
-        renderRequests();
+async function fetchRequests() {
+    try {
+        const response = await fetch(API_BASE_URL);
+        
+        if (!response.ok) {
+            throw new Error(`Ошибка HTTP: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            renderRequests(data.requests);
+        } else {
+            console.error("Ошибка загрузки заявок:", data.message);
+            alert("Ошибка загрузки заявок: " + (data.message || "Неизвестная ошибка"));
+        }
+    } catch (error) {
+        console.error('Ошибка сети:', error);
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: red; padding: 20px;">Не удалось подключиться к Backend-серверу (Node.js).</td></tr>';
     }
 }
 
-function logout() {
-    localStorage.removeItem("auth");
+/**
+ * отправляет запрос на изменение статуса
+ * @param {string} id 
+ * @param {string} status 
+ */
+async function updateStatus(id, status) {
+    const actionText = status === 'approved' ? 'ПРИНЯТЬ' : 'ОТКЛОНИТЬ';
+    if (!confirm(`Вы уверены, что хотите ${actionText} заявку ${id}?`)) {
+        return;
+    }
+    const approverLogin = localStorage.getItem("username"); 
+    if (!approverLogin) {
+        alert("Ошибка: Не удалось получить логин администратора.");
+        return;
+    }
 
-    window.location.href = "login.html";
+    try {
+        const response = await fetch(`${API_BASE_URL}/update-status`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, status, approverLogin}) 
+        });
+        
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            console.log(data.message);
+            fetchRequests(); 
+        } else {
+            alert("Ошибка: " + (data.message || "Не удалось изменить статус."));
+        }
+    } catch (error) {
+        console.error('Ошибка сети:', error);
+        alert("Ошибка связи с сервером при обновлении статуса.");
+    }
 }
 
-renderRequests();
+
+// запускаем загрузку данных при полной загрузке DOM
+document.addEventListener('DOMContentLoaded', fetchRequests);

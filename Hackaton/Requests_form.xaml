@@ -47,7 +47,6 @@
                         <DatePicker Name="datePicker"
                                 Height="30"
                                 Background="#2A3849"
-                                Foreground="White"
                                 BorderBrush="#1ABC9C"
                                 Text="{Binding DataTime}"/>
                     </StackPanel>

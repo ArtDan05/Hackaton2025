@@ -29,10 +29,11 @@
                   SelectionMode="Single"
                   Background="White"
                   BorderBrush="#1ABC9C"
-                  BorderThickness="1">
+                  BorderThickness="1"
+                  MouseDoubleClick="DoubleClickOnGrid">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Название" 
-                                    Binding="{Binding Name}" 
+                                    Binding="{Binding Resource}" 
                                     Width="*"/>
                 <DataGridTextColumn Header="Состояние" 
                                     Binding="{Binding Status}" 

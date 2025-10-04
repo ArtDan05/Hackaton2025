@@ -1,19 +1,37 @@
-// server.js
-
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
-const crypto = require('crypto'); // Для MD5 хеширования
+const crypto = require('crypto');
+// логи
+
+const fs = require('fs');
+const path = require('path');
+const LOG_FILE = path.join(__dirname, 'app.log');
+/**
+ * функция для сохранения логов в файл
+ * @param {string} action 
+ * @param {string} user 
+ * @param {string} [details=''] 
+ */
+function logAction(action, user, details = '') {
+    const timestamp = new Date().toISOString();
+    const logEntry = `[${timestamp}] [USER: ${user}] - ${action.toUpperCase()}${details ? ' | ' + details : ''}\n`;
+
+    fs.appendFile(LOG_FILE, logEntry, (err) => {
+        if (err) {
+            console.error(`Ошибка записи лога в файл ${LOG_FILE}:`, err);
+        }
+    });
+}
 
 const app = express();
 const PORT = 5000;
-const DB_FILE = 'secrets.db'; // Файл БД должен лежать рядом с server.js
+const DB_FILE = 'secrets.db'; 
 
-// --- Настройка Express ---
-app.use(cors()); // Разрешаем запросы с других портов (с нашего frontend)
-app.use(express.json()); // Позволяет читать JSON из тела запроса
 
-// --- Подключение к базе данных ---
+app.use(cors()); 
+app.use(express.json());
+
 const db = new sqlite3.Database(DB_FILE, (err) => {
     if (err) {
         console.error(`Ошибка при открытии базы данных: ${err.message}`);
@@ -22,12 +40,14 @@ const db = new sqlite3.Database(DB_FILE, (err) => {
     console.log(`Успешно подключено к базе данных SQLite: ${DB_FILE}`);
 });
 
-// Функция MD5 хеширования
 const md5Hash = (text) => {
     return crypto.createHash('md5').update(text).digest('hex');
 };
 
-// --- API Endpoint для авторизации ---
+const generateId = (prefix) => {
+    return prefix + Date.now().toString(36) + Math.random().toString(36).substring(2, 6).toUpperCase();
+};
+
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
 
@@ -35,23 +55,19 @@ app.post('/api/login', (req, res) => {
         return res.status(400).json({ success: false, message: "Не указан логин или пароль" });
     }
 
-    // 1. Хеширование пароля MD5
+
     const passwordHash = md5Hash(password);
 
     console.log(`\n--- ПОПЫТКА АВТОРИЗАЦИИ (Node.js) ---`);
     console.log(`Введенный логин: '${username}'`);
     console.log(`Сгенерированный MD5 хеш: '${passwordHash}'`);
     
-    // 2. SQL Запрос
-    // Используем TRIM() и UCASE() для повышения надежности, т.к. вы уверены в данных.
-    // ВАЖНО: SQLite по умолчанию нечувствителен к регистру для TEXT, но TRIM помогает.
     const sql = `
         SELECT UserID, Role, Username
         FROM Users 
         WHERE Username = ? AND PasswordHash = ?
     `;
 
-    // 3. Выполнение запроса
     db.get(sql, [username, passwordHash], (err, row) => {
         if (err) {
             console.error(`Ошибка выполнения запроса: ${err.message}`);
@@ -61,13 +77,12 @@ app.post('/api/login', (req, res) => {
         console.log(`Результат запроса (row): ${row ? 'Найден' : 'Не найден'}`);
 
         if (row) {
-            // Успешный вход
+
             const role = row.Role;
             const userId = row.UserID;
-            const fetchedUsername = row.Username; // <-- ДОБАВЛЕНО: Теперь мы его извлекаем!
-
-            // Перенаправление (Frontend ожидает 'admin' или 'manager')
+            const fetchedUsername = row.Username; 
             const roleForFrontend = (role === 'admin' || role === 'manager') ? role : 'manager';
+            logAction('Успешная Авторизация', row.Username, `Роль: ${role}`);
 
             return res.json({
                 success: true,
@@ -77,13 +92,104 @@ app.post('/api/login', (req, res) => {
                 message: "Авторизация успешна"
             });
         } else {
-            // Неверный логин или пароль
+            logAction('Ошибка Авторизации', username, `Неверный логин или пароль`);
             return res.status(401).json({ success: false, message: "Неверный логин или пароль" });
         }
     });
 });
+app.get('/api/requests', (req, res) => {
+    const sql = `
+        SELECT 
+            ID, 
+            Login, 
+            Resource, 
+            Reason, 
+            Status, 
+            DateTime 
+        FROM Requests 
+        ORDER BY ID DESC;
+    `;
 
-// --- Запуск сервера ---
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            console.error(`Ошибка при получении заявок: ${err.message}`);
+            return res.status(500).json({ success: false, message: "Ошибка сервера БД" });
+        }
+        res.json({ success: true, requests: rows });
+    });
+});
+
+app.post('/api/requests/update-status', (req, res) => {
+    const { id, status, approverLogin } = req.body; 
+    const userForLog = approverLogin
+
+    if (!id || !status || (status !== 'approved' && status !== 'rejected')) {
+        logAction('Ошибка Модерации Заявки', userForLog, `Неверные данные: ID=${id}, Status=${status}`);
+        return res.status(400).json({ success: false, message: "Неверные данные для обновления статуса." });
+    }
+    
+    const sql = `
+        UPDATE Requests 
+        SET Status = ?
+        WHERE ID = ? AND Status = 'pending'
+    `;
+
+    db.run(sql, [status, id], function(err) {
+        if (err) {
+            console.error(`Ошибка при обновлении статуса: ${err.message}`);
+            return res.status(500).json({ success: false, message: "Ошибка сервера БД" });
+        }
+        
+        if (this.changes > 0) {
+            res.json({ success: true, message: `Заявка ${id} обновлена до ${status}.` });
+            logAction(`Заявка ${status.toUpperCase()}`, userForLog, `ID: ${id}`);
+            
+        } else {
+            res.status(404).json({ success: false, message: "Заявка не найдена или ее статус уже изменен." });
+        }
+    });
+});
+
+app.post('/api/requests/submit', (req, res) => {
+    const { 
+        resource,
+        reason, 
+        login, 
+        untilDate
+    } = req.body;
+
+    if (!resource || !reason || !login) {
+        return res.status(400).json({ success: false, message: "Не все обязательные поля заполнены." });
+    }
+
+    const requestID = generateId('REQ');
+    const status = 'pending'; 
+    const submissionDateTime = new Date().toISOString(); 
+
+    const sql = `
+        INSERT INTO Requests (ID, Login, Resource, Reason, Status, DateTime)
+        VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+    const params = [
+        requestID,
+        login, 
+        resource,
+        reason,
+        status,
+        untilDate
+    ];
+
+    db.run(sql, params, function(err) {
+        if (err) {
+            console.error(`Ошибка при создании заявки: ${err.message}`);
+            return res.status(500).json({ success: false, message: "Ошибка сервера БД при сохранении заявки." });
+        }
+        logAction('Отправка заявки', login, `ID: ${requestID}, Ресурс: ${resource}`);
+        console.log(`Создана новая заявка: ${requestID}`);
+        res.json({ success: true, message: `Заявка успешно отправлена на рассмотрение. ID: ${requestID}` });
+    });
+});
 app.listen(PORT, () => {
     console.log(`✅ Backend API запущен на http://localhost:${PORT}`);
     console.log(`-----------------------------------------------`);

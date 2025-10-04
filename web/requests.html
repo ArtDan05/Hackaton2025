@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>SecretManager — Портал Заявок</title>
+    <title>SecretManager — Портал заявок</title>
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/requests.css">
     <link rel="icon" type="image/png" href="images/logo.png">
@@ -29,38 +29,22 @@
     </nav>
 
     <div class="container">
-        <header class="page-header">
-            <h2>Создание заявки на доступ к секрету</h2>
-        </header>
-
         <div class="card request-form-card">
             <form id="requestForm">
-                <div class="form-group">
-                    <label for="resource" class="form-label">Тип ресурса</label>
-                    <select class="form-select" id="resource" required>
-                        <option value="" disabled selected>Выберите тип...</option>
-                        <option>База данных (SQLite)</option>
-                        <option>API-ключ (Production)</option>
-                        <option>SFTP доступ</option>
-                        <option>Прочий секрет</option>
-                    </select>
-                </div>
                 
                 <div class="form-group">
-                    <label for="resourceName" class="form-label">Название ресурса (например, "Prod DB Finance")</label>
-                    <input type="text" class="form-control" id="resourceName" required>
-                </div>
+                    <label for="resource" class="form-label">Название ресурса</label>
+                    <input type="text" class="form-control" id="resource" required> </div>
                 
                 <div class="form-group">
                     <label for="reason" class="form-label">Обоснование необходимости доступа</label>
                     <textarea class="form-textarea" id="reason" required placeholder="Кратко опишите, зачем вам нужен этот секрет..."></textarea>
                 </div>
-
                 <div class="form-group">
-                    <label for="until" class="form-label">Доступ необходим до (дата)</label>
-                    <input type="date" class="form-control" id="until" required>
+                    <label for="untilDate" class="form-label">Доступ необходим до (дата)</label>
+                    <input type="date" class="form-control" id="untilDate" required>
                 </div>
-                
+
                 <button type="submit" class="btn-submit">Отправить заявку</button>
             </form>
         </div>
