@@ -78,7 +78,7 @@ namespace Hackaton
                     UserID = "USE" + Guid.NewGuid().ToString("N").Substring(0, 5).ToUpper(),
                     Username = login,
                     PasswordHash = password,
-                    Role = "User"
+                    Role = "user"
                 };
 
                 _context.Users.Add(newUser);
