@@ -5,25 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Hackaton"
         mc:Ignorable="d"
-        Title="Registration" Height="450" Width="800">
-    <Grid Background="#FFE8E8E8">
+        Title="Registration" Height="450" Width="800" Background="#1E2A3A">
+    <Grid>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="300">
-            <TextBlock Text="Регистрация" FontSize="20" FontWeight="Bold" 
-              HorizontalAlignment="Center" Margin="0,0,0,20"/>
+            <TextBlock Text="Регистрация" FontSize="24" FontWeight="Bold" 
+                      HorizontalAlignment="Center" Margin="0,0,0,30"
+                      Foreground="White"/>
 
-            <Label Content="Логин:" FontWeight="Bold"/>
-            <TextBox Name="LoginBox" Height="35" Margin="0,0,0,10" 
-            Padding="5" Background="White" BorderBrush="#FF7A7A7A"/>
+            <Label Content="Логин:" FontWeight="Bold" Foreground="White"/>
+            <TextBox Name="LoginBox" Height="35" Margin="0,0,0,15" 
+                    Padding="5" Background="#2A3849" Foreground="White" 
+                    BorderBrush="#1ABC9C" BorderThickness="1"/>
 
-            <Label Content="Пароль:" FontWeight="Bold"/>
-            <PasswordBox Name="PasswordBox" Height="35" Margin="0,0,0,20"
-               Padding="5" Background="White" BorderBrush="#FF7A7A7A"/>
+            <Label Content="Пароль:" FontWeight="Bold" Foreground="White"/>
+            <PasswordBox Name="PasswordBox" Height="35" Margin="0,0,0,25"
+                       Padding="5" Background="#2A3849" Foreground="White" 
+                       BorderBrush="#1ABC9C" BorderThickness="1"/>
 
-            <Button Content="Зарегистрироваться" Width="200" Height="30"
-           Background="#FF0078D7" Foreground="White" Click="Register_Click"/>
+            <Button Content="Зарегистрироваться" Width="200" Height="35"
+                   Background="#1ABC9C" Foreground="White" 
+                   FontWeight="Bold" Click="Register_Click"/>
 
             <TextBlock Name="StatusText" Margin="0,20,0,0" TextWrapping="Wrap"
-             Foreground="Red" HorizontalAlignment="Center"/>
+                     Foreground="#E74C3C" HorizontalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>
