@@ -38,7 +38,7 @@ namespace Hackaton
         {
             DataGrid dg = sender as DataGrid;
             var so = dg.SelectedItem;
-            if (so.GetType().GetProperty("Status").GetValue(so).ToString() == "Approved") {
+            if (so.GetType().GetProperty("Status").GetValue(so).ToString() == "approved") {
                 
                 SecretSeeker sw = new SecretSeeker(so.GetType().GetProperty("Resource").GetValue(so).ToString());
                 sw.Show();

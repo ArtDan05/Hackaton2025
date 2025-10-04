@@ -35,7 +35,7 @@ namespace Hackaton
                 DateTime = new DateOnly(int.Parse(date[2]), int.Parse(date[1]), int.Parse(date[0])),
                 Reason = txtReason.Text,
                 Resource = txtResource.Text,
-                Status = "Pending",
+                Status = "pending",
                 Login = MainWindow.login
             };
 
