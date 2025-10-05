@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,10 +13,18 @@ namespace Hackaton.Data
         public DbSet<Users> Users { get; set; }
         public DbSet<Secrets> Secrets { get; set; }
         public DbSet<Requests> Requests { get; set; }
+        const Int32 BufferSize = 128;
+        string dbpath;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=../Database/secrets.db");
+            using (var fileStream = File.OpenRead("DatabasePath.txt"))
+            using (var streamReader = new StreamReader(fileStream, Encoding.UTF8, true, BufferSize))
+            {
+                dbpath = streamReader.ReadLine();
+            }
+            optionsBuilder.UseSqlite($"Data Source={dbpath}");
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
